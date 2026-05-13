@@ -1,11 +1,14 @@
 import {
+  addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   orderBy,
   query,
   QueryDocumentSnapshot,
+  updateDoc,
   where,
   type DocumentData,
 } from "firebase/firestore";
@@ -38,6 +41,20 @@ export const getProductById = async (id: string): Promise<Product | null> => {
   } as Product;
 };
 
+//* Crear un nuevo producto:
+type NewProduct = Omit<Product, "id">;
+// const newProduct = {
+//   name: "Teclado Mecánico",
+//   price: 150,
+//   category: "peripherals",
+//   stock: 5
+// };
+
+export const addProduct = async (product: NewProduct): Promise<string> => {
+  const docRef = await addDoc(collection(db, "products"), product);
+  return docRef.id;
+};
+
 //* Obtener productos por categoría ordenados por precio:
 //* Mapper reutilizable
 const mapProduct = (doc: QueryDocumentSnapshot<DocumentData>): Product => {
@@ -49,12 +66,11 @@ const mapProduct = (doc: QueryDocumentSnapshot<DocumentData>): Product => {
   } as Product;
 };
 
-//* Obtener productos por categoría ordenados por precio
 export const getProductsByCategory = async (
   category: string,
 ): Promise<Product[]> => {
   try {
-    // Validación básica
+    // Validación básica:
     if (!category.trim()) {
       return [];
     }
@@ -75,6 +91,23 @@ export const getProductsByCategory = async (
 
     throw new Error("Failed to fetch products by category");
   }
+};
+
+//* Modificar producto:
+type UpdateProduct = Partial<Omit<Product, "id">>;
+
+export const updateProduct = async (
+  id: string,
+  updates: UpdateProduct
+): Promise<void> => {
+  const ref = doc(db, "products", id);
+  await updateDoc(ref, updates);
+};
+
+//* Eliminar producto por ID:
+export const deleteProduct = async (id: string): Promise<void> => {
+  const ref = doc(db, "products", id);
+  await deleteDoc(ref);
 };
 
 // export const getProductsByCategory = async (
