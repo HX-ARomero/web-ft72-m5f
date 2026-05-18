@@ -1,0 +1,40 @@
+import { Link } from "react-router-dom";
+
+export const Header = () => {
+  return (
+    <header
+      style={{
+        display: "flex",
+        gap: "1rem",
+        padding: "1rem",
+        borderBottom: "1px solid #ccc",
+        alignItems: "center",
+      }}
+    >
+      <Link to="/">Home</Link>
+      <Link to="/products">Products</Link>
+
+      {/* Link solo para Usuario Logueado: */}
+      <Link to="/cart">Cart</Link>
+      <Link to="/checkout">Checkout</Link>
+
+      {/* Link solo para Administrador: */}
+      <Link to="/admin">Admin Panel</Link>
+
+      <div
+        style={{
+          marginLeft: "auto",
+          display: "flex",
+          gap: "1rem",
+          alignItems: "center",
+        }}
+      >
+        {/* Ver Logout ó Login/Signup: */}
+        <span>{"user@mail.com"}</span>
+        <button onClick={() => confirm("Logout?")}>Logout</button>
+        <Link to="/login">Login</Link>
+        <Link to="/signup">Signup</Link>
+      </div>
+    </header>
+  );
+};
